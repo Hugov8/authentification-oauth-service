@@ -9,47 +9,27 @@ import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.reactivestreams.Publisher;
 
-import fr.hugov.auth.dto.GoogleUserInfo;
-import fr.hugov.auth.model.User;
-import fr.hugov.auth.repository.UserRepository;
-import fr.hugov.auth.service.GoogleApiProfileClient;
+import fr.hugov.auth.service.UserService;
 
 @Named("google")
 @Singleton
+@Slf4j
 public class GoogleAuthenticationProvider implements OauthAuthenticationMapper  {
-    private static final Logger log = Logger.getLogger(GoogleAuthenticationProvider.class.getName());
-
-    private static final String PREFIXE_TOKEN = "Bearer ";
-    @Inject 
-    private GoogleApiProfileClient googlClient;
     @Inject
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Override
     public Publisher<AuthenticationResponse> createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State arg1) {
-        Publisher<GoogleUserInfo> googleUserPublisher = googlClient.getUser(PREFIXE_TOKEN + tokenResponse.getAccessToken());
-        log.info("Connexion");
-        return Publishers.map(googleUserPublisher, (googleUser) -> {
-            User user = userRepository.findById(googleUser.getId()).orElse(new User());
-            user.setAccessToken(tokenResponse.getAccessToken());
-            user.setExpiresInDate(tokenResponse.getExpiresInDate().orElse(null));
-            user.setId(googleUser.getId());
-            user.setName(googleUser.getName());
-            user.setRefreshToken(tokenResponse.getRefreshToken());
-            user.setScope(tokenResponse.getScope());
-            user.setTokenType(tokenResponse.getTokenType());
-
-            userRepository.save(user);
-
-            return AuthenticationResponse.success(googleUser.getId(), Collections.singletonList("SHEET"), 
-                            Map.of("sub", googleUser.getId()));
+        return Publishers.map(userService.saveOrUpdateUser(tokenResponse), (user) -> {
+            return AuthenticationResponse.success(user.getId(), Collections.singletonList("SHEET"), 
+                            Map.of("sub", user.getId()));
         });
     }
 }
