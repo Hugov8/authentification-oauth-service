@@ -1,4 +1,4 @@
-package fr.hugov.auth.request;
+package fr.hugov.auth.client;
 
 import java.util.Map;
 

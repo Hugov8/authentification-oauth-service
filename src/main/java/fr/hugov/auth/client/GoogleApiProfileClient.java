@@ -1,4 +1,4 @@
-package fr.hugov.auth.service;
+package fr.hugov.auth.client;
 
 import org.reactivestreams.Publisher;
 
