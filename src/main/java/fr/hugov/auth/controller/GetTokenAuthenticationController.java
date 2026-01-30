@@ -6,8 +6,10 @@ import fr.hugov.auth.exception.UserNotFoundException;
 import fr.hugov.auth.service.UserService;
 import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.Produces;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.authentication.Authentication;
 import io.micronaut.security.rules.SecurityRule;
@@ -20,6 +22,7 @@ public class GetTokenAuthenticationController {
     private UserService userService;
     
     @Get("/token")
+    @Produces(MediaType.TEXT_PLAIN)
     public Publisher<HttpResponse<String>> getToken(Authentication auth) {
         try {
             return Publishers.map(userService.getValidToken(auth.getName()), HttpResponse::ok);
