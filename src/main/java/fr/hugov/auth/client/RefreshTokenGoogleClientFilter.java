@@ -10,9 +10,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RefreshTokenGoogleClientFilter {
     
-    @Value("${micronaut.security.oauth2.clients.google.client-id}") private String clientId;
-    @Value("${micronaut.security.oauth2.clients.google.client-secret}") private String clientSecret;
-    
+    private final String clientId;
+    private final String clientSecret;
+
+    public RefreshTokenGoogleClientFilter(@Value("${micronaut.security.oauth2.clients.google.client-id}") String clientId, @Value("${micronaut.security.oauth2.clients.google.client-secret}") String clientSecret) {
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
+    }
 
     @RequestFilter
     public void filter(MutableHttpRequest<?> request) {

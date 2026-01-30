@@ -28,8 +28,7 @@ public class GoogleAuthenticationProvider implements OauthAuthenticationMapper  
     @Override
     public Publisher<AuthenticationResponse> createAuthenticationResponse(TokenResponse tokenResponse, @Nullable State arg1) {
         return Publishers.map(userService.saveOrUpdateUser(tokenResponse), (user) -> {
-            return AuthenticationResponse.success(user.getId(), Collections.singletonList("SHEET"), 
-                            Map.of("sub", user.getId()));
+            return AuthenticationResponse.success(user.getId(), Collections.singletonList("SHEET"));
         });
     }
 }
