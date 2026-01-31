@@ -41,7 +41,9 @@ public class UserServiceImpl implements UserService {
                 if (expirationDate.minusSeconds(120).isBefore(now)) {
                     return refreshToken(user);
                 } else {
-                    return Publishers.just(encryptionService.decrypt(user.getAccessToken()));
+                    String token = encryptionService.decrypt(user.getAccessToken());
+                    userRepository.update(user);
+                    return Publishers.just(token);
                 }
             }).orElseThrow(() -> new UserNotFoundException("L'user d'id " + userId + "n'a pas été trouvé", null));
     }
@@ -80,7 +82,7 @@ public class UserServiceImpl implements UserService {
             user.setTokenType(tokenResponse.getTokenType());
 
             return update ? userRepository.update(user) : userRepository.save(user);
-        }) ;
+        });
         
     }
     
