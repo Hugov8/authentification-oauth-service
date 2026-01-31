@@ -8,6 +8,8 @@ import org.reactivestreams.Publisher;
 
 import fr.hugov.auth.client.GoogleApiProfileClient;
 import fr.hugov.auth.client.RefreshTokenGoogleClient;
+import fr.hugov.auth.dto.AuthMeInfo;
+import fr.hugov.auth.dto.AuthMeInfo.AuthenticationStatus;
 import fr.hugov.auth.exception.UserNotFoundException;
 import fr.hugov.auth.model.User;
 import fr.hugov.auth.repository.UserRepository;
@@ -84,6 +86,17 @@ public class UserServiceImpl implements UserService {
             return update ? userRepository.update(user) : userRepository.save(user);
         });
         
+    }
+
+    @Override
+    public Publisher<AuthMeInfo> infosUser(String userId) throws UserNotFoundException {
+        return userRepository.findById(userId)
+            .map(user -> {
+                AuthMeInfo authMeInfo = new AuthMeInfo();
+                authMeInfo.setUser(user.getName());
+                authMeInfo.setStatus(AuthenticationStatus.AUTHENTIFIED);
+                return Publishers.just(authMeInfo);
+            }).orElseThrow(() -> new UserNotFoundException("L'user d'id " + userId + "n'a pas été trouvé", null));
     }
     
 }
