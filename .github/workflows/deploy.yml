@@ -42,10 +42,9 @@ jobs:
           IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:1.0
           IMAGE_NAME_LOWER=$(echo "$IMAGE_NAME" | tr '[:upper:]' '[:lower:]')
           echo "IMAGE_NAME=$IMAGE_NAME_LOWER" >> $GITHUB_ENV
-          echo $(uname -m)
 
       - name: Build Docker image using maven
-        run: chmod 777 ./mvnw &&./mvnw package -Dpackaging=docker-native -Pgraalvm -DskipTests
+        run: chmod 777 ./mvnw &&./mvnw package -Dpackaging=docker-native -Pgraalvm -DskipTests -Dmicronaut.native-image.base-image-run=ghcr.io/graalvm/native-image-community:25.0.2-ol8-20260120@sha256:1a162440cd58256fc3b99848d5b5cba1562d470c7eb0224d6b79d2087860cf64
 
       - name: Tag image for GHCR
         run: |
