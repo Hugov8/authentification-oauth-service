@@ -48,7 +48,7 @@ jobs:
 
       - name: Tag image for GHCR
         run: |
-          docker tag oauth-service:1.0 $IMAGE_NAME
+          docker tag oauth:latest $IMAGE_NAME
 
       - name: Push Docker image to GHCR
         run: |
