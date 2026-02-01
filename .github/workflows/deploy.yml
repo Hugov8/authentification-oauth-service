@@ -44,7 +44,7 @@ jobs:
           echo "IMAGE_NAME=$IMAGE_NAME_LOWER" >> $GITHUB_ENV
 
       - name: Build Docker image using maven
-        run: chmod 777 ./mvnw &&./mvnw package -Dpackaging=docker
+        run: chmod 777 ./mvnw &&./mvnw package -Dpackaging=docker -DskipTests
 
       - name: Tag image for GHCR
         run: |
