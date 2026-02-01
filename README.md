@@ -17,6 +17,7 @@ services:
       - ENCRYPTION_SECRET=
       - GOOGLE_API_KEY=
       - LOGIN_LOGOUT_REDIRECT=
+      - JWT_GENERATOR_SECRET=
 ```
 
 ## Micronaut 4.10.7 Documentation
