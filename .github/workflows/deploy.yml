@@ -42,6 +42,7 @@ jobs:
           IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:1.0
           IMAGE_NAME_LOWER=$(echo "$IMAGE_NAME" | tr '[:upper:]' '[:lower:]')
           echo "IMAGE_NAME=$IMAGE_NAME_LOWER" >> $GITHUB_ENV
+          echo $(uname -m)
 
       - name: Build Docker image using maven
         run: chmod 777 ./mvnw &&./mvnw package -Dpackaging=docker-native -Pgraalvm -DskipTests
