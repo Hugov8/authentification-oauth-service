@@ -1,3 +1,24 @@
+# Authentification Service
+
+## Déploiement du container 
+```yaml
+services:
+  auth-service:
+    image: TODO
+    container_name: auth-service
+    ports:
+      - 8080:8080
+    environment:
+      - JDBC_URL=
+      - JDBC_USER=
+      - JDBC_PASSWORD=
+      - GOOGLE_CLIENT_ID=
+      - GOOGLE_CLIENT_SECRET=
+      - ENCRYPTION_SECRET=
+      - GOOGLE_API_KEY=
+      - LOGIN_LOGOUT_REDIRECT=
+```
+
 ## Micronaut 4.10.7 Documentation
 
 - [User Guide](https://docs.micronaut.io/4.10.7/guide/index.html)
