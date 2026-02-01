@@ -13,6 +13,7 @@ import fr.hugov.auth.dto.AuthMeInfo.AuthenticationStatus;
 import fr.hugov.auth.exception.UserNotFoundException;
 import fr.hugov.auth.model.User;
 import fr.hugov.auth.repository.UserRepository;
+import io.micronaut.context.annotation.Value;
 import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.security.oauth2.endpoint.token.response.TokenResponse;
 import jakarta.inject.Inject;
@@ -33,6 +34,10 @@ public class UserServiceImpl implements UserService {
     private EncryptionService encryptionService;
     @Inject
     private RefreshTokenGoogleClient refreshTokenGoogleClient;
+    @Value("${application.google.api.key}")
+    private String apiKey;
+    @Value("${micronaut.security.oauth2.clients.google.client-id}")
+    private String clientId;
 
     @Override
     public Publisher<String> getValidToken(String userId) throws UserNotFoundException {
@@ -98,5 +103,15 @@ public class UserServiceImpl implements UserService {
                 return Publishers.just(authMeInfo);
             }).orElseThrow(() -> new UserNotFoundException("L'user d'id " + userId + "n'a pas été trouvé", null));
     }
+
+    @Override
+    public String getApiKey() {
+        return apiKey;
+    }
     
+    @Override
+    public String getClientId() {
+        return clientId;
+    }
+
 }

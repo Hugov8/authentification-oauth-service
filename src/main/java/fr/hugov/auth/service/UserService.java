@@ -11,4 +11,6 @@ public interface UserService {
     Publisher<String> getValidToken(String userId) throws UserNotFoundException;
     Publisher<User> saveOrUpdateUser(TokenResponse tokenResponse);
     Publisher<AuthMeInfo> infosUser(String userId) throws UserNotFoundException;
+    String getApiKey();
+    String getClientId();
 }

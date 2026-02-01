@@ -5,6 +5,7 @@ import java.util.Date;
 import org.reactivestreams.Publisher;
 
 import fr.hugov.auth.dto.AuthMeInfo;
+import fr.hugov.auth.dto.PickerInfos;
 import fr.hugov.auth.dto.AuthMeInfo.AuthenticationStatus;
 import fr.hugov.auth.exception.UserNotFoundException;
 import fr.hugov.auth.service.UserService;
@@ -32,6 +33,22 @@ public class AuthenticationController {
             return Publishers.map(userService.getValidToken(auth.getName()), HttpResponse::ok);
         } catch (UserNotFoundException e) {
             return Publishers.just(HttpResponse.badRequest("Merci de vous reconnecter"));
+        }
+    }
+
+    @Get("/google/api/picker/infos")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Publisher<HttpResponse<PickerInfos>> getPickerInfo(Authentication auth) {
+        try {
+            return Publishers.map(userService.getValidToken(auth.getName()), token -> {
+                PickerInfos infos = new PickerInfos();
+                infos.setToken(token);
+                infos.setClientId(userService.getClientId());
+                infos.setApiKey(userService.getApiKey());
+                return HttpResponse.ok(infos);
+            });
+        } catch (UserNotFoundException e) {
+            return Publishers.just(HttpResponse.badRequest(new PickerInfos()));
         }
     }
 
